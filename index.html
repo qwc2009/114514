@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浅雾川牛逼</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            overflow: hidden;
+            font-family: 'Microsoft YaHei', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+        
+        .title {
+            font-size: 6rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 2rem;
+            position: relative;
+            color: #fff;
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px #ff00de,
+                0 0 30px #ff00de,
+                0 0 40px #ff00de;
+            animation: neon-flicker 2s infinite alternate;
+        }
+        
+        .subtitle {
+            font-size: 2rem;
+            color: #fff;
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px #00b7ff,
+                0 0 30px #00b7ff;
+            animation: color-change 5s infinite;
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .fireworks {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+        
+        .floating-text {
+            position: absolute;
+            font-size: 1.5rem;
+            color: #fff;
+            opacity: 0.7;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes neon-flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #ff00de,
+                    0 0 30px #ff00de,
+                    0 0 40px #ff00de;
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+            }
+        }
+        
+        @keyframes color-change {
+            0% {
+                color: #ff00de;
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #ff00de,
+                    0 0 30px #ff00de;
+            }
+            25% {
+                color: #00b7ff;
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #00b7ff,
+                    0 0 30px #00b7ff;
+            }
+            50% {
+                color: #00ff9d;
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #00ff9d,
+                    0 0 30px #00ff9d;
+            }
+            75% {
+                color: #ffeb3b;
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #ffeb3b,
+                    0 0 30px #ffeb3b;
+            }
+            100% {
+                color: #ff00de;
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #ff00de,
+                    0 0 30px #ff00de;
+            }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(100px, -100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas class="particles" id="particles"></canvas>
+    <canvas class="fireworks" id="fireworks"></canvas>
+    
+    <div class="container">
+        <h1 class="title">浅雾川牛逼</h1>
+        <p class="subtitle">宇宙最强 · 无敌存在</p>
+    </div>
+
+    <script>
+        // 粒子背景效果
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let particlesArray = [];
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 5 + 1;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+                this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                if (this.x > canvas.width) this.x = 0;
+                else if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                else if (this.y < 0) this.y = canvas.height;
+            }
+            
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        function init() {
+            particlesArray = [];
+            for (let i = 0; i < 100; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+        
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        
+        init();
+        animateParticles();
+        
+        // 烟花效果
+        const fireworksCanvas = document.getElementById('fireworks');
+        const fctx = fireworksCanvas.getContext('2d');
+        
+        fireworksCanvas.width = window.innerWidth;
+        fireworksCanvas.height = window.innerHeight;
+        
+        let fireworks = [];
+        let particles = [];
+        
+        class Firework {
+            constructor() {
+                this.x = Math.random() * fireworksCanvas.width;
+                this.y = fireworksCanvas.height;
+                this.targetX = Math.random() * fireworksCanvas.width;
+                this.targetY = Math.random() * (fireworksCanvas.height / 2);
+                this.speed = Math.random() * 2 + 2;
+                this.acceleration = 1.05;
+                this.brightness = Math.random() * 50 + 50;
+                this.hue = Math.floor(Math.random() * 360);
+                this.alpha = 1;
+                this.trail = [];
+                this.timer = 0;
+            }
+            
+            update() {
+                this.trail.push([this.x, this.y]);
+                if (this.trail.length > 5) this.trail.shift();
+                
+                let dx = this.targetX - this.x;
+                let dy = this.targetY - this.y;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                
+                this.speed *= this.acceleration;
+                
+                this.x += (dx / dist) * this.speed;
+                this.y += (dy / dist) * this.speed;
+                
+                this.timer++;
+                
+                if (dist < 1 || this.timer > 100) {
+                    createParticles(this.x, this.y, this.hue);
+                    return true;
+                }
+                return false;
+            }
+            
+            draw() {
+                fctx.beginPath();
+                fctx.moveTo(this.trail[0][0], this.trail[0][1]);
+                for (let i = 1; i < this.trail.length; i++) {
+                    fctx.lineTo(this.trail[i][0], this.trail[i][1]);
+                }
+                fctx.strokeStyle = `hsla(${this.hue}, 100%, ${this.brightness}%, ${this.alpha})`;
+                fctx.stroke();
+                
+                fctx.beginPath();
+                fctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                fctx.fillStyle = `hsla(${this.hue}, 100%, ${this.brightness}%, ${this.alpha})`;
+                fctx.fill();
+            }
+        }
+        
+        class Particle2 {
+            constructor(x, y, hue) {
+                this.x = x;
+                this.y = y;
+                this.speed = Math.random() * 5 + 1;
+                this.angle = Math.random() * Math.PI * 2;
+                this.friction = 0.95;
+                this.gravity = 0.2;
+                this.hue = hue;
+                this.brightness = Math.random() * 50 + 50;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.015 + 0.005;
+            }
+            
+            update() {
+                this.speed *= this.friction;
+                this.x += Math.cos(this.angle) * this.speed;
+                this.y += Math.sin(this.angle) * this.speed + this.gravity;
+                this.alpha -= this.decay;
+                
+                return this.alpha > 0;
+            }
+            
+            draw() {
+                fctx.beginPath();
+                fctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                fctx.fillStyle = `hsla(${this.hue}, 100%, ${this.brightness}%, ${this.alpha})`;
+                fctx.fill();
+            }
+        }
+        
+        function createParticles(x, y, hue) {
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle2(x, y, hue));
+            }
+        }
+        
+        function animateFireworks() {
+            requestAnimationFrame(animateFireworks);
+            
+            fctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            fctx.fillRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+            
+            if (Math.random() < 0.03) {
+                fireworks.push(new Firework());
+            }
+            
+            for (let i = 0; i < fireworks.length; i++) {
+                if (fireworks[i].update()) {
+                    fireworks.splice(i, 1);
+                    i--;
+                } else {
+                    fireworks[i].draw();
+                }
+            }
+            
+            for (let i = 0; i < particles.length; i++) {
+                if (particles[i].update()) {
+                    particles[i].draw();
+                } else {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+        
+        animateFireworks();
+        
+        // 窗口大小调整
+        window.addEventListener('resize', function() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            fireworksCanvas.width = window.innerWidth;
+            fireworksCanvas.height = window.innerHeight;
+            init();
+        });
+        
+        // 添加浮动文字
+        function createFloatingText() {
+            const texts = ['浅雾川牛逼', '宇宙最强', '无敌存在', 'YYDS', '永远滴神'];
+            const text = document.createElement('div');
+            text.className = 'floating-text';
+            text.textContent = texts[Math.floor(Math.random() * texts.length)];
+            text.style.left = Math.random() * 100 + 'vw';
+            text.style.top = Math.random() * 100 + 'vh';
+            text.style.animationDuration = (Math.random() * 20 + 10) + 's';
+            document.body.appendChild(text);
+            
+            setTimeout(() => {
+                document.body.removeChild(text);
+            }, 30000);
+        }
+        
+        setInterval(createFloatingText, 2000);
+    </script>
+</body>
+</html>
